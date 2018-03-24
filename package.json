@@ -22,6 +22,7 @@
     "eslint-config-google": "^0.9.1",
     "jsdom": "^9.12.0",
     "mocha": "^3.0.0",
+    "nodemon": "^1.17.2",
     "supertest": "^3.0.0",
     "wdio-mocha-framework": "^0.4.0",
     "wdio-phantomjs-service": "^0.2.2",

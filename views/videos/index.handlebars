@@ -1,0 +1,11 @@
+<body>
+    <a rel="stylesheet" href="create">Add new video</a>
+    <div id="videos-container" class="contents-container"></div>
+    {{#each videos as |video|}}
+    <div class="video-card">
+        <div class="video-title">
+            {{video.title}}
+        </div>
+    </div>
+    {{/each}}
+</body>
