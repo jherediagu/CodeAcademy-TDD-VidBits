@@ -21,4 +21,20 @@ describe('user visits the landing page', () => {
         });
 
     });
+
+
+    describe('with existing video', () => {
+        it('renders it in the list', () => {
+
+            // Setup
+            const title = 'An existing video';
+
+            // Exercise
+            browser.url('/');
+
+            // Verification
+            assert.equal(browser.getText('#videos-container'), title);
+        });
+
+    });
 });

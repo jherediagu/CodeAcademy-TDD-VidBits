@@ -3,6 +3,17 @@ const request = require('supertest');
 const app = require('../../app');
 const Video = require('../../models/video');
 const { connectDatabase, disconnectDatabase } = require('../database-utilities');
+const { jsdom } = require('jsdom');
+
+const parseTextFromHTML = (htmlAsString, selector) => {
+    const selectedElement = queryHTML(htmlAsString, selector);
+
+    if (selectedElement !== null) {
+        return selectedElement.textContent.trim();
+    } else {
+        throw new Error('no element selected');
+    }
+};
 
 const video = {
     title: 'title-test',
