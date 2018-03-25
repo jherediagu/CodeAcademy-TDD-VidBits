@@ -3,52 +3,33 @@ const request = require('supertest');
 const app = require('../../app');
 const Video = require('../../models/video');
 const { connectDatabase, disconnectDatabase } = require('../database-utilities');
+const { videoObject, createNewVideo, parseTextFromHTML, queryHTML, generateRandomUrl } = require('../utils');
 const { jsdom } = require('jsdom');
 
-const generateRandomUrl = (domain) => {
-    return `http://${domain}/${Math.random()}`;
-};
-
-const queryHTML = (htmlAsString, selector) => {
-    return jsdom(htmlAsString).querySelector(selector);
-};
-
-const parseTextFromHTML = (htmlAsString, selector) => {
-    const selectedElement = queryHTML(htmlAsString, selector);
-
-    if (selectedElement !== null) {
-        return selectedElement.textContent.trim();
-    } else {
-        throw new Error('no element selected');
-    }
-};
-
-const video = {
-    title: 'title-test',
-    description: 'description-test',
-    url: 'http://example.com',
-};
+const video = videoObject();
 
 describe('Routes video test', () => {
 
     beforeEach(connectDatabase);
     afterEach(disconnectDatabase);
 
-    it('check video page created', async () => {
+    it('check video is created', async () => {
 
         // Exercise
         const response = await request(app)
-            .post(`/videos`)
+            .post('/videos')
             .type('form')
             .send(video);
+        const createdVideo = await Video.findOne(video);
 
         // Verify
-        const pageText = parseTextFromHTML(response.text, 'body');
-        assert.include(pageText, video.title);
+        assert.equal(createdVideo.title, video.title);
+        assert.equal(createdVideo.url, video.url);
+        assert.equal(createdVideo.description, video.description);
     })
 
     describe('POST', () => {
-        it('/videos result 201', async () => {
+        it('/videos result 302', async () => {
 
             // Exercise
             const response = await request(app)
@@ -57,7 +38,7 @@ describe('Routes video test', () => {
                 .send(video);
 
             // Verify
-            assert.equal(response.status, 201);
+            assert.equal(response.status, 302);
         });
 
         describe('submits a video with a title and description', () => {
@@ -132,25 +113,6 @@ describe('Routes video test', () => {
             assert.include(pageText, invalidVideo.description);
         });
 
-        it('check url', async () => {
-            // Setup
-            const validVideo = {
-                title: "test",
-                description: "description test",
-                url: generateRandomUrl('example.com'),
-            };
-
-            // Exercise
-            const response = await request(app)
-                .post(`/videos`)
-                .type('form')
-                .send(validVideo);
-
-            // Verify
-            const url = parseTextFromHTML(response.text, 'body');
-            assert.include(url, validVideo.url);
-        });
-
         it('/videos saves a Video document', async () => {
 
             // Exercise
@@ -158,29 +120,64 @@ describe('Routes video test', () => {
                 .post('/videos')
                 .type('form')
                 .send(video);
+            const createdVideo = await Video.findOne(video);
 
             // Verify
-            const pageText = parseTextFromHTML(response.text, 'body');
-            assert.include(pageText, video.url);
+            assert.equal(response.headers.location, `/videos/${createdVideo._id}`);
         });
 
+        it('Send description, when the title is missing preserves the other field values', async () => {
+            // Setup
+            const invalidVideo = {
+                title: "",
+                description: "test description",
+                url: "",
+            };
+
+            // Exercise
+            const response = await request(app)
+                .post('/videos/')
+                .type('form')
+                .send(invalidVideo);
+
+            // Verify
+            assert.equal(response.status, 400);
+            assert.include(parseTextFromHTML(response.text, '#description'), 'test description');
+        });
+
+        it('no URL, when the title is missing preserves the other field values', async () => {
+            // Setup
+            const invalidVideo = {
+                title: "",
+                url: "",
+            };
+
+            // Exercise
+            const response = await request(app)
+                .post('/videos/')
+                .type('form')
+                .send(invalidVideo);
+
+            // Verify
+            assert.equal(response.status, 400);
+        });
     });
 
     describe('GET', () => {
         describe('/videos/:id', () => {
 
-            it('show the Video', async () => {
-                const video = await Video.create({
-                    title: 'title test',
-                    description: 'description test',
-                });
+            it('show the video', async () => {
 
-                const response = await request(app).get(`/videos/${video._id}`);
+                // Setup
+                const newVideo = new Video(videoObject());
 
-                const pageText = parseTextFromHTML(response.text, 'body');
-                assert.include(pageText, video.title);
-                assert.include(pageText, video.description);
-                assert.include(pageText, video.url);
+                // Exercise
+                newVideo.save();
+                const response = await request(app).get(`/videos/${newVideo._id}`);
+
+                // Verification
+                const pageText = parseTextFromHTML(response.text, '#video-title');
+                assert.include(pageText, newVideo.title);
             });
         });
     });

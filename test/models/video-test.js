@@ -20,6 +20,18 @@ describe('checks that the Video model', () => {
     assert.strictEqual(newVideo.title, titleNotString.toString());
   });
 
+  it('is required', () => {
+
+    // Setup
+    const video = new Video({ title: null });
+
+    // Exercise
+    video.validateSync();
+
+    // Verify
+    assert.equal(video.errors.title.message, 'title is required');
+  });
+
   it('has a description that is a string', () => {
 
     // Setup
@@ -42,6 +54,18 @@ describe('checks that the Video model', () => {
 
     // Verify
     assert.strictEqual(newVideo.url, urlNotString.toString());
+  });
+
+  it('is required', () => {
+
+    // Setup
+    const video = new Video({ url: null });
+
+    // Exercise
+    video.validateSync();
+
+    // Verify
+    assert.equal(video.errors.url.message, 'a URL is required');
   });
 });
 

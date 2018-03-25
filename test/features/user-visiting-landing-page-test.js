@@ -1,8 +1,8 @@
 const { assert } = require('chai');
+const { generateRandomUrl } = require('../utils');
+const { videoObject, createNewVideo, parseTextFromHTML, queryHTML } = require('../utils');
 
-const generateRandomUrl = (domain) => {
-    return `http://${domain}/${Math.random()}`;
-};
+
 
 describe('user visits the landing page', () => {
     describe('no existing videos', () => {
@@ -28,18 +28,32 @@ describe('user visits the landing page', () => {
 
 
     describe('with existing video', () => {
-        it('renders it in the list', () => {
+        it('renders it in the list', async () => {
 
             // Setup
-            const title = 'An existing video';
-            const url = 'http://example.com';
+            const video = await Video.create();
 
             // Exercise
             browser.url('/');
 
             // Verification
-            assert.equal(browser.getText('#videos-container'), title);
-            assert.equal(browser.getText('#videos-container'), url);
+            assert.equal(browser.getText('#videos-container'), video.title);
+            assert.equal(browser.getText('#videos-container'), video.url);
+            assert.equal(browser.getText('#videos-container'), video.description);
+        });
+
+        it('can navigate to the created video', async () => {
+
+            // Setup
+            const video = await Video.create();
+
+            // Exercise
+            browser.url('/');
+            browser.click('.video-title');
+
+            // Verification
+            assert.include(browser.getText('body'), video.description);
+            assert.include(browser.getText('body'), video.title);
         });
 
     });
