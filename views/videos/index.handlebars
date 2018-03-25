@@ -7,6 +7,9 @@
             {{video.title}}
         </div>
         <iframe class="video-player" src="{{video.url}}" name="url" frameborder="0" allowfullscreen></iframe>
+        <div class="video-link">
+            <a href="/videos/{{video._id}}">show {{video.title}}</a>
+        </div>
     </div>
     {{/each}}
 </body>

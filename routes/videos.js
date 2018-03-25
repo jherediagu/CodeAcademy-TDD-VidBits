@@ -35,4 +35,28 @@ router.get('/videos/:id', async (req, res) => {
     res.render('videos/show', { newVideo });
 });
 
+router.get('/videos/:id/edit', async (req, res) => {
+    const { id } = req.params;
+    const newVideo = await Video.findById(id, (error) => {
+        if (error) res.render('error', { error });
+    });
+
+    res.render('videos/edit', { newVideo });
+});
+
+
+router.post('/update', async (req, res) => {
+
+    const { title, description, url, id } = req.body;
+
+    await Video.update({ _id: id }, { title, description, url }, {}, (error) => {
+        if (error) {
+            res.status(400).redirect(`/videos/${id}/edit`);
+        }
+    });
+
+    res.redirect(`/videos/${id}`);
+});
+
+
 module.exports = router;

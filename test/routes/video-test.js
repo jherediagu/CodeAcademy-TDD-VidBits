@@ -161,6 +161,37 @@ describe('Routes video test', () => {
             // Verify
             assert.equal(response.status, 400);
         });
+
+        it('updates the video', async () => {
+
+            // Exercise
+            const response = await request(app)
+                .post('/update/')
+                .type('form')
+                .send(video);
+
+            // Verify
+            assert.equal(response.status, 302);
+        });
+
+        it('updates the video, input is invalid', async () => {
+
+            const invalidVideo = {
+                title: '',
+                url: '',
+                description: 'test-description',
+            };
+
+            // Exercise
+            const response = await request(app)
+                .post('/update/')
+                .type('form')
+                .send(video);
+
+            // Verify
+            assert.equal(response.status, 302);
+        });
+
     });
 
     describe('GET', () => {
@@ -177,6 +208,23 @@ describe('Routes video test', () => {
 
                 // Verification
                 const pageText = parseTextFromHTML(response.text, '#video-title');
+                assert.include(pageText, newVideo.title);
+            });
+        });
+
+        describe('/videos/:id/edit', () => {
+
+            it('show the edit form', async () => {
+
+                // Setup
+                const newVideo = new Video(videoObject());
+
+                // Exercise
+                newVideo.save();
+                const response = await request(app).get(`/videos/${newVideo._id}/edit`);
+
+                // Verification
+                const pageText = parseTextFromHTML(response.text, '#title');
                 assert.include(pageText, newVideo.title);
             });
         });

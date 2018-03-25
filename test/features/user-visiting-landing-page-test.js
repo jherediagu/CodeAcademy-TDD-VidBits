@@ -3,7 +3,6 @@ const { generateRandomUrl } = require('../utils');
 const { videoObject, createNewVideo, parseTextFromHTML, queryHTML } = require('../utils');
 
 
-
 describe('user visits the landing page', () => {
     describe('no existing videos', () => {
         it('shows no videos', () => {
@@ -25,7 +24,6 @@ describe('user visits the landing page', () => {
         });
 
     });
-
 
     describe('with existing video', () => {
         it('renders it in the list', async () => {
@@ -55,6 +53,5 @@ describe('user visits the landing page', () => {
             assert.include(browser.getText('body'), video.description);
             assert.include(browser.getText('body'), video.title);
         });
-
     });
 });

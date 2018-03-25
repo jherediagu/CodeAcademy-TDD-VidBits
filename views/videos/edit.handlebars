@@ -1,0 +1,16 @@
+<body>
+    {{#if error}}
+    <span>{{error}}</span>
+    {{/if}}
+    <h1>Edit video</h1>
+    <form action="/update" method="POST">
+        <input type="hidden" name="id" id="id" value="{{newVideo._id}}" />
+        <label for="">title</label>
+        <input type="text" name="title" id="title" placeholder="title" value="{{newVideo.title}}" />
+        <label for="">url</label>
+        <input type="text" name="url" id="url" placeholder="url" value="{{newVideo.url}}" />
+        <label for="">description</label>
+        <textarea name="description" id="description">{{newVideo.description}}</textarea>
+        <button type="submit" id="submit-button">save video</button>
+    </form>
+</body>
