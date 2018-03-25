@@ -1,5 +1,9 @@
 const { assert } = require('chai');
 
+const generateRandomUrl = (domain) => {
+    return `http://${domain}/${Math.random()}`;
+};
+
 describe('user visits the landing page', () => {
     describe('no existing videos', () => {
         it('shows no videos', () => {

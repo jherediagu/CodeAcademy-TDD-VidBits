@@ -31,6 +31,18 @@ describe('checks that the Video model', () => {
     // Verify
     assert.strictEqual(newVideo.description, descriptionNotString.toString());
   });
+
+  it('has a url that is a string', () => {
+
+    // Setup
+    const urlNotString = 2;
+
+    // Exercise
+    const newVideo = new Video({ url: urlNotString });
+
+    // Verify
+    assert.strictEqual(newVideo.url, urlNotString.toString());
+  });
 });
 
 module.exports = {

@@ -3,7 +3,7 @@
         <div class="video-title">
             <h1>{{newVideo.title}}</h1>
             <a id="edit" href="/videos/{{newVideo._id}}/edit">Edit</a>
-
+            <iframe class="video-player" src="{{newVideo.url}}" name="url" frameborder="0" allowfullscreen></iframe>
             <form method="post" action="/videos/{{newVideo._id}}/deletions">
                 <input id="delete" type="submit" value="Delete">
             </form>

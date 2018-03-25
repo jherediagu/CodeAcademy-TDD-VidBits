@@ -5,6 +5,10 @@ const Video = require('../../models/video');
 const { connectDatabase, disconnectDatabase } = require('../database-utilities');
 const { jsdom } = require('jsdom');
 
+const generateRandomUrl = (domain) => {
+    return `http://${domain}/${Math.random()}`;
+};
+
 const queryHTML = (htmlAsString, selector) => {
     return jsdom(htmlAsString).querySelector(selector);
 };
@@ -69,6 +73,7 @@ describe('Routes video test', () => {
 
                 // Verify
                 assert.equal(checkVideo.title, video.title);
+                assert.equal(checkVideo.url, video.url);
                 assert.equal(checkVideo.description, video.description);
             });
         });
@@ -127,6 +132,25 @@ describe('Routes video test', () => {
             assert.include(pageText, invalidVideo.description);
         });
 
+        it('check url', async () => {
+            // Setup
+            const validVideo = {
+                title: "test",
+                description: "description test",
+                url: generateRandomUrl('example.com'),
+            };
+
+            // Exercise
+            const response = await request(app)
+                .post(`/videos`)
+                .type('form')
+                .send(validVideo);
+
+            // Verify
+            const url = parseTextFromHTML(response.text, 'body');
+            assert.include(url, validVideo.url);
+        });
+
         it('/videos saves a Video document', async () => {
 
             // Exercise
@@ -156,6 +180,7 @@ describe('Routes video test', () => {
                 const pageText = parseTextFromHTML(response.text, 'body');
                 assert.include(pageText, video.title);
                 assert.include(pageText, video.description);
+                assert.include(pageText, video.url);
             });
         });
     });
