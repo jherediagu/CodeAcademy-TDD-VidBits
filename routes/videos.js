@@ -7,7 +7,7 @@ router.post('/videos', async (req, res) => {
     const newVideo = new Video({ title, description });
 
     if (!newVideo.title) {
-        res.sendStatus(400).render('videos/create', { newVideo });
+        res.status(400).render('videos/create', { newVideo });
     } else {
         res.render('videos/show', { newVideo });
     }
@@ -26,6 +26,5 @@ router.get('/videos/:id', async (request, response) => {
 
     response.render('videos/show', { newVideo });
 });
-
 
 module.exports = router;

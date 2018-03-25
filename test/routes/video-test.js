@@ -106,7 +106,7 @@ describe('Routes video test', () => {
             assert.equal(response.status, 400);
         });
 
-        it('displays the other data when title is empty', async () => {
+        it('displays the old data when title is empty', async () => {
             // Setup
             const invalidVideo = {
                 title: "",
@@ -120,7 +120,8 @@ describe('Routes video test', () => {
                 .send(invalidVideo);
 
             // Verify
-            assert.equal(browser.getText('#description'), invalidVideo.title);
+            const pageText = parseTextFromHTML(response.text, 'body');
+            assert.include(pageText, invalidVideo.description);
         });
 
     });
