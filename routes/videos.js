@@ -58,5 +58,14 @@ router.post('/update', async (req, res) => {
     res.redirect(`/videos/${id}`);
 });
 
+router.post('/videos/:id/deletions', async (req, res) => {
+
+    const { id } = req.params;
+
+    await Video.findOneAndRemove({ _id: id }, (error) => {
+        res.redirect('/');
+    });
+});
+
 
 module.exports = router;
