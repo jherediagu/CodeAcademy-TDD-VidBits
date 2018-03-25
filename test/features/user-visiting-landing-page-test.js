@@ -28,12 +28,14 @@ describe('user visits the landing page', () => {
 
             // Setup
             const title = 'An existing video';
+            const url = 'http://example.com';
 
             // Exercise
             browser.url('/');
 
             // Verification
             assert.equal(browser.getText('#videos-container'), title);
+            assert.equal(browser.getText('#videos-container'), url);
         });
 
     });

@@ -5,6 +5,7 @@
     <h1>Save a video</h1>
     <form action="/videos" method="POST">
         <input type="text" name="title" id="title" placeholder="title" />
+        <input type="text" name="url" id="url" placeholder="url" />
         <textarea name="description" id="description">{{newVideo.description}}</textarea>
         <button type="submit" id="submit-button">save video</button>
     </form>

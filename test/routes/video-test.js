@@ -29,15 +29,17 @@ describe('Routes video test', () => {
     beforeEach(connectDatabase);
     afterEach(disconnectDatabase);
 
-    it('302 status code', async () => {
-        const title = 'title-test';
+    it('check video page created', async () => {
 
+        // Exercise
         const response = await request(app)
-            .post('/videos')
+            .post(`/videos`)
             .type('form')
-            .send({ title })
+            .send(video);
 
-        assert.equal(response.status, 302);
+        // Verify
+        const pageText = parseTextFromHTML(response.text, 'body');
+        assert.include(pageText, video.title);
     })
 
     describe('POST', () => {
@@ -127,14 +129,12 @@ describe('Routes video test', () => {
     });
 
     describe('GET', () => {
-        describe('GET /videos/:id', () => {
-            beforeEach(connectDatabase);
-            afterEach(disconnectDatabase);
+        describe('/videos/:id', () => {
 
-            it('renders the Video', async () => {
+            it('show the Video', async () => {
                 const video = await Video.create({
-                    title: 'Dummy Video',
-                    description: 'A video to test against',
+                    title: 'title test',
+                    description: 'description test',
                 });
 
                 const response = await request(app).get(`/videos/${video._id}`);

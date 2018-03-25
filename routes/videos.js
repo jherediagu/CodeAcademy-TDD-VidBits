@@ -9,7 +9,7 @@ router.post('/videos', async (req, res) => {
     if (!newVideo.title) {
         res.status(400).render('videos/create', { newVideo });
     } else {
-        res.render('videos/show', { newVideo });
+        res.render(`/videos/${newVideo._id}`, { newVideo });
     }
 });
 
