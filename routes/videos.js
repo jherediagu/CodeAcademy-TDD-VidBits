@@ -6,21 +6,26 @@ router.post('/videos', async (req, res) => {
     const { title, description } = req.body;
     const newVideo = new Video({ title, description });
 
-    console.log(newVideo);
-
-    res.render('videos/show', { newVideo });
+    if (!newVideo.title) {
+        res.sendStatus(400).render('videos/create', { newVideo });
+    } else {
+        res.render('videos/show', { newVideo });
+    }
 });
 
 router.get('/videos', async (req, res) => {
-
-    console.log('sss');
-
     res.render('videos/index');
 });
 
 router.get('/videos/create', async (req, res) => {
-
     res.render('videos/create');
 });
+
+router.get('/videos/:id', async (request, response) => {
+    const newVideo = await findVideo(request);
+
+    response.render('videos/show', { newVideo });
+});
+
 
 module.exports = router;

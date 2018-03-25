@@ -1,8 +1,11 @@
 <body>
+    {{#if error}}
+    <span>{{error}}</span>
+    {{/if}}
     <h1>Save a video</h1>
     <form action="/videos" method="POST">
         <input type="text" name="title" id="title" placeholder="title" />
-        <textarea name="description" id="description" placeholder="description"></textarea>
+        <textarea name="description" id="description">{{newVideo.description}}</textarea>
         <button type="submit" id="submit-button">save video</button>
     </form>
 </body>
