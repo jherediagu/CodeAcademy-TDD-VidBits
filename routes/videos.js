@@ -3,8 +3,8 @@ const Video = require('../models/video');
 
 router.post('/videos', async (req, res) => {
 
-    const { title, description } = req.body;
-    const newVideo = new Video({ title, description });
+    const { title, description, url } = req.body;
+    const newVideo = new Video({ title, description, url });
 
     if (!newVideo.title) {
         res.status(400).render('videos/create', { newVideo });

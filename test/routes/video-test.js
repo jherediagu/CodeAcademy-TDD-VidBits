@@ -22,6 +22,7 @@ const parseTextFromHTML = (htmlAsString, selector) => {
 const video = {
     title: 'title-test',
     description: 'description-test',
+    url: 'http://example.com',
 };
 
 describe('Routes video test', () => {
@@ -52,7 +53,7 @@ describe('Routes video test', () => {
                 .send(video);
 
             // Verify
-            assert.equal(response.status, 200);
+            assert.equal(response.status, 201);
         });
 
         describe('submits a video with a title and description', () => {
@@ -124,6 +125,19 @@ describe('Routes video test', () => {
             // Verify
             const pageText = parseTextFromHTML(response.text, 'body');
             assert.include(pageText, invalidVideo.description);
+        });
+
+        it('/videos saves a Video document', async () => {
+
+            // Exercise
+            const response = await request(app)
+                .post('/videos')
+                .type('form')
+                .send(video);
+
+            // Verify
+            const pageText = parseTextFromHTML(response.text, 'body');
+            assert.include(pageText, video.url);
         });
 
     });
