@@ -28,19 +28,15 @@ router.get('/videos/create', async (req, res) => {
 
 router.get('/videos/:id', async (req, res) => {
     const { id } = req.params;
-    const newVideo = await Video.findById(id, (error) => {
-        if (error) res.render('error', { error });
-    });
+    const newVideo = await Video.findById(id);
 
     res.render('videos/show', { newVideo });
 });
 
 router.get('/videos/:id/edit', async (req, res) => {
     const { id } = req.params;
-    const newVideo = await Video.findById(id, (error) => {
-        if (error) res.render('error', { error });
-    });
-
+    const newVideo = await Video.findById(id);
+    
     res.render('videos/edit', { newVideo });
 });
 
